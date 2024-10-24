@@ -106,8 +106,3 @@ func ProcedureDiagonal(matrix [][]int) (int, int) {
 	}
 
 }
-
-
-// func ProcedureDiamond() (int, int) {
-//     return 0, 0
-// }
