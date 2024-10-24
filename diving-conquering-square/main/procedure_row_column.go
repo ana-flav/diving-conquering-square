@@ -5,7 +5,6 @@ import (
 	"math"
 )
 
-
 func ColumnQuery(matrix [][]int, col int, rowStart int, rowEnd int) (int, int) {
 	minRow := rowStart
 	minValue := matrix[rowStart][col]
@@ -54,13 +53,12 @@ func CheckLocalMinimum(matrix [][]int, row int, col int) bool {
 	if col < nCols-1 && matrix[row][col+1] < value {
 		fmt.Println(col)
 		fmt.Println(nCols)
-		fmt.Println(matrix[row][col+1])	
+		fmt.Println(matrix[row][col+1])
 		fmt.Println("4")
 		return false
 	}
 	return true
 }
-
 
 func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, colEnd int) (int, int) {
 
@@ -68,7 +66,6 @@ func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, 
 		return rowStart, colStart
 	}
 
-	
 	midCol := (colStart + colEnd) / 2
 	rowMin, colMinValue := ColumnQuery(matrix, midCol, rowStart, rowEnd)
 	fmt.Println(rowMin, colMinValue)
@@ -95,19 +92,15 @@ func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, 
 	fmt.Println(colMin, rowMinValue)
 
 	upperValue := math.MaxInt64
-	
+
 	if midRow > rowStart {
 		upperValue = matrix[midRow-1][colMin]
 	}
-	
-
 
 	if CheckLocalMinimum(matrix, midRow, colMin) {
 		return midRow, colMin
 	}
 
-	
-	
 	if midCol > colStart && colMinValue > leftValue {
 		return ProcedureRowColumn(matrix, rowStart, rowEnd, colStart, midCol-1)
 	} else if midCol < colEnd && colMinValue > rightValue {
