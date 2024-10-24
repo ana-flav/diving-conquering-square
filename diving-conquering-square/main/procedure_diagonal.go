@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -94,6 +93,21 @@ func ProcedureDiagonal(matrix [][]int) (int, int) {
         return row3, col3 
     }
 
-    return -1, -1
+    row4, col4 := LineQuery(matrix, "y=-x", 0, 0.25)
+
+	if Check(matrix, row4, col4) {
+		return row4, col4
+	}
+
+	if row4 == col4 {
+		return ProcedureDiamond()
+	} else {
+		return ProcedureDiamond()
+	}
+
 }
 
+
+func ProcedureDiamond() (int, int) {
+    return 0, 0
+}
