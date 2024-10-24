@@ -47,13 +47,9 @@ func CheckLocalMinimum(matrix [][]int, row int, col int) bool {
 	}
 	if col > 0 && matrix[row][col-1] < value {
 		// verifica se o valor na coluna da esquerda e maior que o valor atual
-		fmt.Println("3")
 		return false
 	}
 	if col < nCols-1 && matrix[row][col+1] < value {
-		fmt.Println(col)
-		fmt.Println(nCols)
-		fmt.Println(matrix[row][col+1])
 		fmt.Println("4")
 		return false
 	}
@@ -101,6 +97,8 @@ func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, 
 		return midRow, colMin
 	}
 
+
+	
 	if midCol > colStart && colMinValue > leftValue {
 		return ProcedureRowColumn(matrix, rowStart, rowEnd, colStart, midCol-1)
 	} else if midCol < colEnd && colMinValue > rightValue {
