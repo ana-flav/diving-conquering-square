@@ -35,9 +35,15 @@ func checkNeighbors(matriz [][]int, x int, y int) bool {
 	valor := matriz[x][y]
 
 	if x > 0 {
-		if valor > matriz[x-1][y-1] {
-			return false
+		if y > 0 {
+			if valor > matriz[x][y-1] {
+				return false
+			}
+			if valor > matriz[x-1][y-1] {
+				return false
+			}
 		}
+
 		if valor > matriz[x-1][y] {
 			return false
 		}
@@ -46,10 +52,7 @@ func checkNeighbors(matriz [][]int, x int, y int) bool {
 		}
 	}
 
-	if y > 0 {
-		if valor > matriz[x][y-1] {
-			return false
-		}
+	if x < len(matriz)-1 && y > 0 {
 		if valor > matriz[x+1][y-1] {
 			return false
 		}
@@ -88,37 +91,77 @@ func getLista(s int, e int) []int {
 	return lista
 }
 
-func getDiagonal(inicioX int, fimX int, tipo string, n int) []ponto {
+func getDiagonal(valoresX, valoresY []int) []ponto {
 	var lista []ponto
-	if tipo == "x+y=1" {
-		for i := inicioX; i <= fimX; i++ {
-			lista = append(lista, ponto{i, i})
-		}
+	// if tipo == "x+y=1" {
+	// 	for i := inicioX; i <= fimX; i++ {
+	// 		lista = append(lista, ponto{i, i})
+	// 	}
+	// }
+
+	// if tipo == "x=y" {
+	// 	for i := inicioX; i <= fimX; i++ {
+	// 		j := n - i
+	// 		lista = append(lista, ponto{i, j})
+	// 	}
+	// }
+
+	aux := valoresX
+	if len(valoresY) < len(valoresX) {
+		aux = valoresY
 	}
 
-	if tipo == "x=y" {
-		for i := inicioX; i <= fimX; i++ {
-			j := n - i
-			lista = append(lista, ponto{i, j})
-		}
+	for i := 0; i < len(aux); i++ {
+		fmt.Printf("%v ", valoresX[i])
+		fmt.Printf("%v \n", valoresY[i])
+		lista = append(lista, ponto{valoresX[i], valoresY[i]})
 	}
 	return lista
 }
 
 func ProcedureDiamond(matriz [][]int, rowStart int, rowEnd int, colStart int, colEnd int) (int, int) {
-	if rowStart == rowEnd && colStart == colEnd {
-		return rowStart, colStart
+	if rowStart == rowEnd || colStart == colEnd {
+		fmt.Println("cai aqui", rowStart, rowEnd, colStart, colEnd)
+		if checkNeighbors(matriz, rowStart, colStart) {
+			return rowStart, colStart
+		}
+		return rowStart, colStart + 1
 	}
 
-	fmt.Println("antes: ", rowStart, rowEnd, colEnd)
-	diagonal := getDiagonal(int(math.Ceil(float64(colEnd)*0.25)), int(math.Ceil(float64(colEnd)*0.75)), "x+y=1", len(matriz)-1)
+	colRange := colEnd - colStart
+	rowRange := rowEnd - rowStart
+	fmt.Println("antes: ", rowStart, colStart, colEnd)
+	valoresX := getLista(
+		int(math.Floor(float64(colRange)*0.25))+colStart,
+		int(math.Ceil(float64(colEnd)*0.75)),
+	)
+	valoresY := getLista(
+		int(math.Floor(float64(rowRange)*0.25))+rowStart,
+		int(math.Ceil(float64(rowEnd)*0.75)),
+	)
+	diagonal := getDiagonal(valoresX, valoresY)
+	// diagonal := getDiagonal(
+	// 	int(math.Floor(float64(colRange)*0.25))+colStart,
+	// 	int(math.Ceil(float64(colEnd)*0.75)),
+	// 	"x+y=1",
+	// 	rowEnd,
+	// )
 	fmt.Println("diagonal 1: ", diagonal)
 	row, col := lineQuery(matriz, diagonal)
 	if checkNeighbors(matriz, row, col) {
 		return row, col
 	}
 
-	diagonal = getDiagonal(int(float64(colEnd)*0.25), int(float64(colEnd)*0.50), "x=y", len(matriz)-1)
+	valoresX = getLista(
+		int(math.Floor(float64(colEnd)*0.25)),
+		int(math.Ceil(float64(colEnd)*0.50)),
+	)
+	valoresY = getLista(
+		int(math.Floor(float64(rowRange)*0.50)+float64(rowStart)),
+		int(math.Ceil(float64(rowEnd)*0.25)),
+	)
+
+	diagonal = getDiagonal(valoresX, valoresY)
 	fmt.Println("diagonal 2: ", diagonal)
 	fmt.Println("checando", diagonal)
 	row, col = lineQuery(matriz, diagonal)
@@ -126,16 +169,12 @@ func ProcedureDiamond(matriz [][]int, rowStart int, rowEnd int, colStart int, co
 		return row, col
 	}
 
-	nRowStart := int(float64(rowEnd) * 0.25)
-	if nRowStart == rowStart {
-		nRowStart++
-	}
+	// nRowStart := int(float64(rowEnd) * 0.25)
+	nRowStart := int(float64(rowEnd)*0.50) + 1
+	nColEnd := int(float64(colEnd) * 0.75)
+	nColStart := int(float64(colEnd) * 0.25)
 
-	nRowEnd := int(float64(rowEnd) * 0.75)
-	nColEnd := int(float64(colEnd) * 0.50)
+	fmt.Println("depois: ", nRowStart, nColStart, nColEnd)
 
-	fmt.Println("depois: ", nRowStart, nRowEnd, nColEnd)
-
-	return ProcedureDiamond(matriz, nRowStart, nRowEnd, 0, nColEnd)
-
+	return ProcedureDiamond(matriz, nRowStart, rowEnd, nColStart, nColEnd)
 }
