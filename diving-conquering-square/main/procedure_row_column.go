@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -31,18 +30,14 @@ func RowQuery(matrix [][]int, row int, colStart int, colEnd int) (int, int) {
 
 func CheckLocalMinimum(matrix [][]int, row int, col int) bool {
 	value := matrix[row][col]
-	fmt.Println(value)
 	nRows, nCols := len(matrix), len(matrix[0])
 
 	if row > 0 && matrix[row-1][col] < value {
 		// verifica se o valor na linha de cima e maior que o valor atual
-		fmt.Println("1")
 		return false
 	}
 	if row < nRows-1 && matrix[row+1][col] < value {
 		// verifica se o valor na linha de baixo e maior que o valor atual
-		fmt.Println("2")
-
 		return false
 	}
 	if col > 0 && matrix[row][col-1] < value {
@@ -50,21 +45,18 @@ func CheckLocalMinimum(matrix [][]int, row int, col int) bool {
 		return false
 	}
 	if col < nCols-1 && matrix[row][col+1] < value {
-		fmt.Println("4")
 		return false
 	}
 	return true
 }
 
 func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, colEnd int) (int, int) {
-
 	if rowStart == rowEnd && colStart == colEnd {
 		return rowStart, colStart
 	}
 
 	midCol := (colStart + colEnd) / 2
 	rowMin, colMinValue := ColumnQuery(matrix, midCol, rowStart, rowEnd)
-	fmt.Println(rowMin, colMinValue)
 
 	leftValue := math.MaxInt64
 	rightValue := math.MaxInt64
@@ -75,17 +67,12 @@ func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, 
 		rightValue = matrix[rowMin][midCol+1]
 	}
 
-	fmt.Println("testetestet")
-	fmt.Println(rowMin, midCol)
 	if CheckLocalMinimum(matrix, rowMin, midCol) {
 		return rowMin, midCol
 	}
 
 	midRow := (rowStart + rowEnd) / 2
-	fmt.Println(midRow)
 	colMin, rowMinValue := RowQuery(matrix, midRow, colStart, colEnd)
-	fmt.Println("snsnsnnsns")
-	fmt.Println(colMin, rowMinValue)
 
 	upperValue := math.MaxInt64
 
@@ -97,8 +84,6 @@ func ProcedureRowColumn(matrix [][]int, rowStart int, rowEnd int, colStart int, 
 		return midRow, colMin
 	}
 
-
-	
 	if midCol > colStart && colMinValue > leftValue {
 		return ProcedureRowColumn(matrix, rowStart, rowEnd, colStart, midCol-1)
 	} else if midCol < colEnd && colMinValue > rightValue {
